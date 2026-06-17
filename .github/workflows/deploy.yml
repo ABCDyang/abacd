@@ -12,8 +12,34 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Deploy to Cloudflare
+      # ----------------------------------------------------
+      # 🚀 部署第一个项目：1318-5168
+      # ----------------------------------------------------
+      # 注入第一个项目的 KV 绑定（从作者源码可知，绑定名必须叫 "KV"）
+      - name: Inject KV for First Worker
+        run: |
+          echo "" >> wrangler.toml
+          echo 'kv_namespaces = [ { binding = "KV", id = "dd5cc52150484c03940c46c8ed679985" } ]' >> wrangler.toml
+
+      - name: Deploy First Worker
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           command: deploy --name 1318-5168
+
+
+      # ----------------------------------------------------
+      # 🚀 部署第二个项目：shouji
+      # ----------------------------------------------------
+      # 还原 wrangler.toml，然后注入第二个项目的 KV 绑定
+      - name: Inject KV for Second Worker
+        run: |
+          git checkout wrangler.toml
+          echo "" >> wrangler.toml
+          echo 'kv_namespaces = [ { binding = "KV", id = "e32c97936d6e441d97d7d6f5cc8896e8" } ]' >> wrangler.toml
+
+      - name: Deploy Second Worker
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          command: deploy --name shouji
