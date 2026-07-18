@@ -3,7 +3,15 @@ name: Deploy to Cloudflare Workers
 on:
   push:
     branches:
-      - main # 当你往 main 分支提交代码时触发
+      - main
+
+  workflow_run:
+    workflows:
+      - Upstream Sync
+    types:
+      - completed
+
+  workflow_dispatch:
 
 jobs:
   deploy:
