@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v4
 
       # ----------------------------------------------------
-      # 🚀 部署第一个项目：1328-5158
+      # 🚀 部署第一个项目：1318-5168
       # ----------------------------------------------------
       # 注入第一个项目的 KV 绑定（从作者源码可知，绑定名必须叫 "KV"）
       - name: Inject KV for First Worker
@@ -33,7 +33,7 @@ jobs:
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          command: deploy --name 1328-5158
+          command: deploy --name 1318-5168
 
 
       # ----------------------------------------------------
