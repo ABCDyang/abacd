@@ -2,6 +2,7 @@ name: Upstream Sync
 
 permissions:
   contents: write
+  actions: write
 
 on:
   schedule:
@@ -33,6 +34,7 @@ jobs:
             # 内容和上游一致，直接对齐，顺带清理历史分叉留下的多余 merge commit
             git reset --hard upstream/main
             git push --force-with-lease origin main
+            echo "上游无内容更新，不触发部署"
           else
             # 有本地修改，保持原来的合并方式，不覆盖任何人的改动
             if ! git pull --no-rebase upstream main; then
@@ -41,4 +43,9 @@ jobs:
               exit 1
             fi
             git push origin main
+            # GITHUB_TOKEN 的 push 不会触发其它工作流的 on:push，
+            # workflow_dispatch 是例外，这里手动调度部署工作流
+            gh workflow run "Deploy to Cloudflare Workers" --ref main
           fi
+        env:
+          GH_TOKEN: ${{ github.token }}
